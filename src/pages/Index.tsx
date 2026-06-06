@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
+import { toast } from "sonner";
 import {
   ChevronRight,
   Mail,
@@ -46,7 +48,7 @@ const partners = [
 
 const portfolio = [
   {
-    src: "/ungido/portfolio-1.jpg",
+    src: "/ungido/portfolio-1.jpg",e
     title: "Captação aérea",
     description: "Narrativa visual para campanhas, eventos e cobertura de produção.",
     tall: true,
@@ -89,6 +91,102 @@ const contactItems = [
 
 
 const Index = () => {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+
+    const wsUrl = import.meta.env.VITE_N8N_WS_URL || "ws://localhost:5678/webhook";
+    
+    try {
+      const socket = new WebSocket(wsUrl);
+      let gotAck = false;
+
+      const timeoutId = setTimeout(() => {
+        if (socket.readyState !== WebSocket.OPEN) {
+          socket.close();
+          toast.error("Ligação ao n8n expirou. Verifique se o servidor está ativo.");
+          setIsSubmitting(false);
+        }
+      }, 5000);
+
+      socket.onopen = () => {
+        clearTimeout(timeoutId);
+        const payload = {
+          event: "form_submission",
+          timestamp: new Date().toISOString(),
+          data: formData
+        };
+        socket.send(JSON.stringify(payload));
+        
+        setTimeout(() => {
+          if (!gotAck && socket.readyState === WebSocket.OPEN) {
+            toast.success("Formulário submetido com sucesso via WebSocket!");
+            setFormData({
+              firstName: "",
+              lastName: "",
+              email: "",
+              subject: "",
+              message: "",
+            });
+            setIsSubmitting(false);
+            socket.close();
+          }
+        }, 1500);
+      };
+
+      socket.onmessage = (event) => {
+        gotAck = true;
+        setIsSubmitting(false);
+        try {
+          const response = JSON.parse(event.data);
+          if (response.status === "error" || response.error) {
+            toast.error(`Erro: ${response.message || "n8n rejeitou a submissão"}`);
+          } else {
+            toast.success("Formulário recebido com sucesso pelo n8n!");
+            setFormData({
+              firstName: "",
+              lastName: "",
+              email: "",
+              subject: "",
+              message: "",
+            });
+          }
+        } catch {
+          toast.success("Formulário submetido com sucesso!");
+          setFormData({
+            firstName: "",
+            lastName: "",
+            email: "",
+            subject: "",
+            message: "",
+          });
+        }
+        socket.close();
+      };
+
+      socket.onerror = (err) => {
+        clearTimeout(timeoutId);
+        setIsSubmitting(false);
+        console.error("Erro WebSocket:", err);
+        toast.error("Erro de ligação WebSocket. Verifique as configurações do n8n.");
+      };
+
+    } catch (err) {
+      setIsSubmitting(false);
+      console.error("Erro ao iniciar WebSocket:", err);
+      toast.error("Não foi possível estabelecer ligação WebSocket.");
+    }
+  };
+
   return (
     <main className="studio-shell">
       <Header />
@@ -360,38 +458,72 @@ const Index = () => {
 
           <form
             className="contact-form"
-            onSubmit={(event) => event.preventDefault()}
+            onSubmit={handleSubmit}
           >
             <h3>Preencha o formulário</h3>
 
             <div className="form-grid">
               <label>
                 <span>Primeiro nome</span>
-                <input type="text" placeholder="Primeiro nome" />
+                <input
+                  type="text"
+                  placeholder="Primeiro nome"
+                  required
+                  value={formData.firstName}
+                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                />
               </label>
               <label>
                 <span>Último nome</span>
-                <input type="text" placeholder="Último nome" />
+                <input
+                  type="text"
+                  placeholder="Último nome"
+                  required
+                  value={formData.lastName}
+                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                />
               </label>
             </div>
 
             <label>
               <span>Email</span>
-              <input type="email" placeholder="seuemail@dominio.com" />
+              <input
+                type="email"
+                placeholder="seuemail@dominio.com"
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
             </label>
 
             <label>
               <span>Assunto</span>
-              <input type="text" placeholder="Em que podemos ajudar?" />
+              <input
+                type="text"
+                placeholder="Em que podemos ajudar?"
+                required
+                value={formData.subject}
+                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+              />
             </label>
 
             <label>
               <span>Mensagem</span>
-              <textarea rows={5} placeholder="Descreva o seu projecto" />
+              <textarea
+                rows={5}
+                placeholder="Descreva o seu projecto"
+                required
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+              />
             </label>
 
-            <button type="submit" className="primary-button primary-button-dark">
-              Submeter
+            <button
+              type="submit"
+              className="primary-button primary-button-dark"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "A enviar..." : "Submeter"}
               <ChevronRight size={18} />
             </button>
           </form>

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import React from "react";
 import fs from "fs";
 import path from "path";
@@ -177,5 +177,63 @@ describe("Ungido Studio - Portfolio Page and Navigation Tests", () => {
     // Press Escape -> should close the lightbox
     fireEvent.keyDown(window, { key: "Escape" });
     expect(screen.queryByTestId("lightbox")).not.toBeInTheDocument();
+  });
+
+  it("should connect to WebSocket and send form data JSON payload on submission", async () => {
+    const mockSend = vi.fn();
+    const mockClose = vi.fn();
+
+    class MockWebSocket {
+      url: string;
+      onopen: (() => void) | null = null;
+      onerror: (() => void) | null = null;
+      onmessage: ((ev: any) => void) | null = null;
+      readyState = 1; // OPEN
+
+      constructor(url: string) {
+        this.url = url;
+        setTimeout(() => {
+          if (this.onopen) this.onopen();
+        }, 10);
+      }
+
+      send = mockSend;
+      close = mockClose;
+    }
+
+    vi.stubGlobal("WebSocket", MockWebSocket);
+
+    render(
+      <MemoryRouter>
+        <Index />
+      </MemoryRouter>
+    );
+
+    // Fill form fields
+    fireEvent.change(screen.getByPlaceholderText("Primeiro nome"), { target: { value: "Mauro" } });
+    fireEvent.change(screen.getByPlaceholderText("Último nome"), { target: { value: "Gunza" } });
+    fireEvent.change(screen.getByPlaceholderText("seuemail@dominio.com"), { target: { value: "mauro@example.com" } });
+    fireEvent.change(screen.getByPlaceholderText("Em que podemos ajudar?"), { target: { value: "Orçamento Vídeo" } });
+    fireEvent.change(screen.getByPlaceholderText("Descreva o seu projecto"), { target: { value: "Produção de vídeo institucional" } });
+
+    // Submit form
+    const submitBtn = screen.getByRole("button", { name: "Submeter" });
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(mockSend).toHaveBeenCalled();
+    });
+
+    const sentPayloadStr = mockSend.mock.calls[0][0];
+    const payload = JSON.parse(sentPayloadStr);
+
+    expect(payload.event).toBe("form_submission");
+    expect(payload.data.firstName).toBe("Mauro");
+    expect(payload.data.lastName).toBe("Gunza");
+    expect(payload.data.email).toBe("mauro@example.com");
+    expect(payload.data.subject).toBe("Orçamento Vídeo");
+    expect(payload.data.message).toBe("Produção de vídeo institucional");
+
+    vi.unstubAllGlobals();
   });
 });
