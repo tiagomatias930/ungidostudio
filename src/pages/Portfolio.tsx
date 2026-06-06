@@ -59,6 +59,54 @@ const portfolioItems: PortfolioItem[] = [
     description: "Perspetivas e detalhes da produção e logística industrial.",
     category: "fotografia",
   },
+  {
+    src: "/portfolio_assets/fotos/unitel1.jpg",
+    title: "Unitel I",
+    description: "Aquecimento da corrida.",
+    category: "multimedia",
+    tall: true,
+  },
+  {
+    src: "/portfolio_assets/fotos/unitel2.jpg",
+    title: "Unitel II",
+    description: "Inicio da corrida.",
+    category: "multimedia",
+    tall: true,
+  },
+  {
+    src: "/portfolio_assets/fotos/unitel3.jpg",
+    title: "Unitel III",
+    description: "Pódio da corrida da Unitel.",
+    category: "multimedia",
+    tall: true,
+  },
+  {
+    src: "/portfolio_assets/fotos/unitel4.jpg",
+    title: "Unitel IV",
+    description: "Publico da corrida da Unitel.",
+    category: "multimedia",
+    tall: true,
+  },
+  {
+    src: "/portfolio_assets/fotos/unitel5.jpg",
+    title: "Unitel V",
+    description: "Publico da corrida da Unitel.",
+    category: "multimedia",
+    tall: true,
+  },
+  {
+    src: "/portfolio_assets/fotos/unitel6.jpg",
+    title: "Unitel VI",
+    description: "Reta final da corrida da Unitel.",
+    category: "multimedia",
+    tall: true,
+  },
+  {
+    src: "/portfolio_assets/fotos/unitel7.jpg",
+    title: "Unitel VII",
+    description: "Premeação da corrida da Unitel..",
+    category: "multimedia",
+  },
 ];
 
 const categories = [

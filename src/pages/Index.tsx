@@ -40,7 +40,8 @@ const partners = [
   { src: "/ungido/logo-talatona.png", alt: "Administração de Talatona" },
   { src: "/ungido/catocA3.png", alt: "CATO-A3" },
   { src: "/ungido/grow_logo.svg", alt: "Grow-Construction" },
-  { src: "/ungido/logo-filda.png", alt: "Filda" },{ src: "/ungido/Unitel.png", alt: "Unitel" },
+  { src: "/ungido/logo-filda.png", alt: "Filda" },
+  { src: "/ungido/unitel.png", alt: "Unitel" },
 ];
 
 const portfolio = [
@@ -54,17 +55,6 @@ const portfolio = [
     src: "/ungido/portfolio-2.jpg",
     title: "Cenário editorial",
     description: "Imagem com composição limpa para destaque em páginas e redes.",
-  },
-  {
-    src: "/ungido/portfolio-3.jpg",
-    title: "Produção de estúdio",
-    description: "Retrato com iluminação controlada e acabamento sofisticado.",
-    tall: true,
-  },
-  {
-    src: "/ungido/portfolio-4.jpg",
-    title: "Cobertura documental",
-    description: "Momentos reais captados com direção e consistência visual.",
   },
 ];
 
@@ -282,7 +272,7 @@ const Index = () => {
               </Link>
               <a
                 className="secondary-button"
-                href="https://www.youtube.com/"
+                href="https://www.youtube.com/@ungidostudio4957/videos"
                 target="_blank"
                 rel="noreferrer"
               >
