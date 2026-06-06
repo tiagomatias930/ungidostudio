@@ -48,7 +48,7 @@ const partners = [
 
 const portfolio = [
   {
-    src: "/ungido/portfolio-1.jpg",e
+    src: "/ungido/portfolio-1.jpg",
     title: "Captação aérea",
     description: "Narrativa visual para campanhas, eventos e cobertura de produção.",
     tall: true,

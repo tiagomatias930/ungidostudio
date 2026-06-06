@@ -71,9 +71,19 @@ npm run preview
 
 ---
 
+## 🔌 Integração n8n via WebSocket
+
+O formulário de contacto do website está totalmente preparado para enviar mensagens em tempo real para um servidor **n8n** através de ligações **WebSocket**.
+
+Para detalhes de configuração do fluxo no n8n, estrutura do payload JSON de envio e variáveis de ambiente, consulte o guia passo a passo em:
+👉 [Guia de Conexão n8n via WebSocket](docs/conexao-n8n-websocket.md)
+
+---
+
 ## 📁 Estrutura do Projecto
 
 ```
+├── docs/                # Documentação do projeto (ex: integração com n8n)
 ├── public/              # Assets estáticos (imagens, CV, robots.txt)
 ├── src/
 │   ├── components/      # Componentes reutilizáveis
