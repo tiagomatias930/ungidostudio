@@ -1,21 +1,21 @@
-# 🌐 Tiago Matias — Portfolio
+# 🌐 Ungido Studio — Produção Multimédia & Soluções Gráficas
 
-🔗 **Live:** [geniomatias.me](https://portfolio.geniomatias.me)
+Website institucional moderno e responsivo do **Ungido Studio**, um estúdio profissional de produção de conteúdo visual, fotografia e design gráfico sediado em Luanda, Angola.
 
 ---
 
-## ✨ Sobre o Projecto
+## ✨ Sobre o Projeto
 
-Um portfólio moderno e responsivo com estética cyberpunk/dark, construído com React, TypeScript e Tailwind CSS. Inclui secções de apresentação, habilidades, experiência profissional, projectos e um terminal interactivo.
+Este website foi desenhado e desenvolvido para apresentar os serviços do Ungido Studio, o seu portfólio de trabalhos recentes e facilitar a captação de clientes através de um formulário inteligente e interativo.
 
-### Secções
+### Principais Funcionalidades
 
-- **Hero** — Apresentação com foto, links sociais e download de CV
-- **About** — Descrição pessoal, localização e formação
-- **Resume** — Skills técnicas, idiomas, experiência e educação
-- **Portfolio** — Galeria de projectos com tech stack e links
-- **Terminal** — Secção interactiva estilo terminal
-- **Visitor Counter** — Contador de visitantes
+- **Hero Dinâmico** — Apresentação imersiva com vídeo de fundo institucional, slogans dinâmicos e botões de chamada para ação (CTA).
+- **Secção de Serviços** — Apresentação dos pilares do estúdio (Fotografia, Multimédia, Serviços Gráficos) com ícones personalizados.
+- **Portfólio Completo** — Galeria dedicada no caminho `/portfolio` contendo todos os trabalhos realizados pelo estúdio (incluindo coberturas industriais como Catoca e Unitel).
+- **Filtro de Projetos** — Filtros interativos para navegar rapidamente por categorias (Todos, Multimédia, Fotografia, Serviços Gráficos).
+- **Visualizador Lightbox Premium** — Visualizador de imagens em ecrã inteiro (modal lightbox) com navegação suave, transições com desfoque de fundo (*glassmorphism*) e suporte completo a navegação por teclado (setas esquerda/direita e tecla `Escape`).
+- **Integração com n8n via WebSocket** — O formulário de contactos estabelece uma ligação WebSocket instantânea e segura com o n8n para transmitir os briefings dos clientes.
 
 ---
 
@@ -24,11 +24,11 @@ Um portfólio moderno e responsivo com estética cyberpunk/dark, construído com
 | Camada       | Tecnologias                                                      |
 | ------------ | ---------------------------------------------------------------- |
 | **Frontend** | React 18, TypeScript, Vite                                       |
-| **Styling**  | Tailwind CSS, shadcn/ui (Radix UI), Lucide Icons                 |
+| **Styling**  | Vanilla CSS, Tailwind CSS, shadcn/ui, Lucide Icons              |
 | **Routing**  | React Router DOM                                                 |
-| **State**    | TanStack React Query, React Hook Form, Zod                      |
-| **Tema**     | next-themes (dark/light)                                         |
-| **Outros**   | Recharts, Embla Carousel, Sonner (toasts), Vaul (drawer)        |
+| **State**    | TanStack React Query, React State                               |
+| **Testes**   | Vitest, Testing Library (React)                                  |
+| **Toasts**   | Sonner (notificações push elegantes)                             |
 
 ---
 
@@ -43,8 +43,8 @@ Um portfólio moderno e responsivo com estética cyberpunk/dark, construído com
 
 ```bash
 # Clonar o repositório
-git clone https://github.com/tiagomatias930/luanda-cyber-folio-craft.git
-cd luanda-cyber-folio-craft
+git clone https://github.com/tiagomatias930/ungidostudio.git
+cd ungidostudio
 
 # Instalar dependências
 npm install
@@ -60,7 +60,7 @@ npm run dev
 bun dev
 ```
 
-A aplicação estará disponível em `http://localhost:8080`.
+A aplicação estará disponível por padrão em `http://localhost:8080`.
 
 ### Build de Produção
 
@@ -69,70 +69,48 @@ npm run build
 npm run preview
 ```
 
+### Testes Automatizados
+
+```bash
+npm run test
+```
+
 ---
 
 ## 🔌 Integração n8n via WebSocket
 
-O formulário de contacto do website está totalmente preparado para enviar mensagens em tempo real para um servidor **n8n** através de ligações **WebSocket**.
+O formulário de contacto está preparado para enviar mensagens em tempo real para um servidor **n8n** através de ligações **WebSocket**. A URL pode ser personalizada no ficheiro `.env` através da chave `VITE_N8N_WS_URL`.
 
-Para detalhes de configuração do fluxo no n8n, estrutura do payload JSON de envio e variáveis de ambiente, consulte o guia passo a passo em:
+Para instruções passo a passo de configuração do workflow no n8n e estrutura do JSON, consulte:
 👉 [Guia de Conexão n8n via WebSocket](docs/conexao-n8n-websocket.md)
 
 ---
 
-## 📁 Estrutura do Projecto
+## 📁 Estrutura do Projeto
 
 ```
-├── docs/                # Documentação do projeto (ex: integração com n8n)
-├── public/              # Assets estáticos (imagens, CV, robots.txt)
+├── docs/                # Documentação técnica (conexão n8n)
+├── public/              # Assets estáticos (vídeos, logotipos e fotos)
+│   ├── ungido/          # Assets de imagem principais do estúdio
+│   └── portfolio_assets/# Assets específicos da galeria (Unitel, Catoca)
 ├── src/
-│   ├── components/      # Componentes reutilizáveis
-│   │   ├── ui/          # Componentes shadcn/ui
-│   │   ├── TerminalSection.tsx
-│   │   └── VisitorCounter.tsx
-│   ├── hooks/           # Custom hooks
-│   ├── lib/             # Utilitários
-│   ├── pages/           # Páginas da aplicação
-│   │   ├── Index.tsx    # Página principal do portfólio
-│   │   └── NotFound.tsx # Página 404
-│   ├── App.tsx          # Root component com providers e routing
-│   ├── main.tsx         # Entry point
-│   └── index.css        # Estilos globais
-├── index.html           # Template HTML
-├── vite.config.ts       # Configuração do Vite
-├── tailwind.config.ts   # Configuração do Tailwind
-├── tsconfig.json        # Configuração do TypeScript
-└── package.json
+│   ├── components/      # Componentes globais e reutilizáveis (Header, Footer)
+│   ├── pages/           # Páginas da aplicação (Index, Portfolio, NotFound)
+│   ├── test/            # Suítes de testes automatizados (vitest)
+│   ├── App.tsx          # Componente raiz e rotas da aplicação
+│   ├── index.css        # Estilos globais e tokens de cores
+│   ├── portfolio.css    # Estilização da galeria e do modal lightbox
+│   └── main.tsx         # Ponto de entrada da aplicação
+├── vite.config.ts       # Configurações do Vite (porta 8080)
+├── package.json
+└── tsconfig.json
 ```
 
 ---
 
-## 📌 Projectos em Destaque
+## 📬 Contacto & Redes Sociais
 
-| Projecto                       | Descrição                                                        | Stack                              |
-| ------------------------------ | ---------------------------------------------------------------- | ---------------------------------- |
-| **SkillarCode**                | Plataforma de aprendizagem de prompt engineering                 | React Native, TypeScript           |
-| **Pembe Na Mwindo**            | Website oficial do grupo de teatro                               | Vite.js, Tailwind CSS, Figma       |
-| **NUTRISCAN App**              | App mobile de gestão nutricional                                 | Vite.js, Expo, Canva               |
-| **Angola Vibes**               | Guia interactivo de turismo em Angola (PWA)                      | React, Supabase, Vite.js           |
-| **Fenix Goals**                | Plataforma de metas baseada na metodologia de Brian Tracy        | TypeScript, HTML                   |
-| **Chronicles of the Unspoken** | RPG táctico imersivo com Gemini 2.5 Live API                     | Studio AI, ReactJs                 |
-| **Gemini Tutor**               | Tutor inteligente com IA para apoio ao estudo                    | Gemini, AI, Web App                |
-| **FéDigital**                  | App de dízimos e ofertas com automação via WhatsApp              | Figma, Adobe UX                    |
-| **Reverse Engineering Tool**   | PHP Reverse Shell para pentesting                                | Python, Sherlock                   |
-
----
-
-## 📬 Contacto
-
-- **Email:** tiagomatias072@gmail.com
-- **GitHub:** [tiagomatias930](https://github.com/tiagomatias930)
-- **LinkedIn:** [Tiago Matias](https://www.linkedin.com/in/tiago-matias-062b88217)
-- **Behance:** [tiagomatias42](https://www.behance.net/tiagomatias42)
-- **Localização:** Luanda, Angola
-
----
-
-## 📄 Licença
-
-Este projecto é de uso pessoal. Todos os direitos reservados © 2026 Tiago Matias.
+- **Telefone:** +244 928 002 093
+- **Localização:** Morro Bento - Luanda, Angola
+- **YouTube:** [@ungidostudio4957](https://www.youtube.com/@ungidostudio4957/videos)
+- **Instagram:** [@ungidostudio_2022](https://www.instagram.com/ungidostudio_2022/)
