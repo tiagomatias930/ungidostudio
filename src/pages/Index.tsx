@@ -1,16 +1,13 @@
-import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Header } from "../components/Header";
+import { Footer } from "../components/Footer";
 import {
   ChevronRight,
-  Facebook,
-  Instagram,
   Mail,
   MapPin,
-  Menu,
   Phone,
-  KeyRound,
   Play,
   Youtube,
-  X,
 } from "lucide-react";
 
 const services = [
@@ -43,7 +40,7 @@ const partners = [
   { src: "/ungido/logo-talatona.png", alt: "Administração de Talatona" },
   { src: "/ungido/catocA3.png", alt: "CATO-A3" },
   { src: "/ungido/grow_logo.svg", alt: "Grow-Construction" },
-  { src: "/ungido/logo-filda.png", alt: "Filda" },
+  { src: "/ungido/logo-filda.png", alt: "Filda" },{ src: "/ungido/Unitel.png", alt: "Unitel" },
 ];
 
 const portfolio = [
@@ -99,67 +96,12 @@ const contactItems = [
   },
 ];
 
-const navItems = [
-  { label: "Sobre Nós", href: "#sobrenos" },
-  { label: "Serviços", href: "#servico" },
-  { label: "Portfólio", href: "#portfolio" },
-  { label: "Contactos", href: "#contacto" },
-];
+
 
 const Index = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
-
   return (
     <main className="studio-shell">
-
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#001033]/90 backdrop-blur-xl">
-        <div className="studio-container header-inner">
-          <a href="#top" className="logo-wrap" aria-label="Ungido Studio">
-            <img
-              src="/ungido/logo-header.png"
-              alt="Ungido Studio"
-              className="logo-img"
-            />
-          </a>
-
-          <nav className="nav-desktop">
-            {navItems.map((item) => (
-              <a key={item.href} href={item.href} className="nav-link">
-                {item.label}
-              </a>
-            ))}
-          </nav>
-
-          <div className="header-actions">
-            <a href="#contacto" className="header-cta">
-              Falar connosco
-            </a>
-            <button
-              type="button"
-              className="menu-button"
-              aria-label="Abrir menu"
-              onClick={() => setMenuOpen((value) => !value)}
-            >
-              {menuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
-        </div>
-
-        {menuOpen ? (
-          <div className="mobile-menu">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="mobile-link"
-                onClick={() => setMenuOpen(false)}
-              >
-                {item.label}
-              </a>
-            ))}
-          </div>
-        ) : null}
-      </header>
+      <Header />
 
       <section id="top" className="hero-section">
         <video
@@ -330,15 +272,24 @@ const Index = () => {
               compromisso com criatividade, qualidade e inovação.
             </p>
 
-            <a
-              className="primary-button primary-button-dark"
-              href="https://www.youtube.com/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Ver no YouTube
-              <Youtube size={18} />
-            </a>
+            <div className="flex flex-wrap gap-4 mt-6">
+              <Link
+                className="primary-button primary-button-dark"
+                to="/portfolio"
+              >
+                Ver mais
+                <ChevronRight size={18} />
+              </Link>
+              <a
+                className="secondary-button"
+                href="https://www.youtube.com/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Ver no YouTube
+                <Youtube size={18} />
+              </a>
+            </div>
           </div>
 
           <div className="portfolio-grid">
@@ -458,54 +409,7 @@ const Index = () => {
         </div>
       </section>
 
-      <footer className="footer">
-        <div className="studio-container footer-grid">
-          <div>
-            <a href="#top" className="footer-logo">
-              <img src="/ungido/logo-footer.png" alt="Ungido Studio" />
-            </a>
-            <p>
-              Produção multimédia e soluções gráficas para marcas que querem
-              comunicar com presença.
-            </p>
-          </div>
-
-          <div>
-            <h4>Redes sociais</h4>
-            <div className="social-links">
-              <a href="https://www.facebook.com/" target="_blank" rel="noreferrer">
-                <Facebook size={18} />
-              </a>
-              <a
-                href="https://www.instagram.com/ungidostudio_2022/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Instagram size={18} />
-              </a>
-              <a href="https://www.youtube.com/" target="_blank" rel="noreferrer">
-                <Youtube size={18} />
-              </a>
-            </div>
-          </div>
-
-          <div>
-            <h4>Links rápidos</h4>
-            <div className="footer-links">
-              {navItems.map((item) => (
-                <a key={item.href} href={item.href}>
-                  {item.label}
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="studio-container footer-bottom">
-          <span>©2025, UNGIDO STUDIO. Todos os direitos reservados.</span>
-          <span>Captamos imagens que contam histórias.</span>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 };
