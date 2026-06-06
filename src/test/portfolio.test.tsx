@@ -35,7 +35,7 @@ describe("Ungido Studio - Portfolio Page and Navigation Tests", () => {
     expect(verMaisButton.closest("a")?.getAttribute("href")).toBe("/portfolio");
   });
 
-  it("should render the Portfolio page and display all 7 works", () => {
+  it("should render the Portfolio page and display all portfolio works including Unitel", () => {
     render(
       <MemoryRouter>
         <Portfolio />
@@ -53,6 +53,8 @@ describe("Ungido Studio - Portfolio Page and Navigation Tests", () => {
     expect(screen.getByText("Mineração Catoca I")).toBeInTheDocument();
     expect(screen.getByText("Mineração Catoca II")).toBeInTheDocument();
     expect(screen.getByText("Mineração Catoca III")).toBeInTheDocument();
+    expect(screen.getByText("Unitel I")).toBeInTheDocument();
+    expect(screen.getByText("Unitel VII")).toBeInTheDocument();
   });
 
   it("should filter portfolio items when clicking on category tabs", () => {
@@ -162,10 +164,10 @@ describe("Ungido Studio - Portfolio Page and Navigation Tests", () => {
     let lightboxImg = screen.getByTestId("lightbox-img");
     expect(lightboxImg.getAttribute("src")).toBe("/ungido/portfolio-1.jpg");
 
-    // Press ArrowLeft (previous) -> should wrap around to the last item (Mineração Catoca III - index 6, /ungido/catoca3.jpg)
+    // Press ArrowLeft (previous) -> should wrap around to the last item (Unitel VII - index 13, /portfolio_assets/fotos/unitel7.jpg)
     fireEvent.keyDown(window, { key: "ArrowLeft" });
     lightboxImg = screen.getByTestId("lightbox-img");
-    expect(lightboxImg.getAttribute("src")).toBe("/ungido/catoca3.jpg");
+    expect(lightboxImg.getAttribute("src")).toBe("/portfolio_assets/fotos/unitel7.jpg");
 
     // Press ArrowRight (next) -> should wrap around back to the first item (Captação aérea - index 0, /ungido/portfolio-1.jpg)
     fireEvent.keyDown(window, { key: "ArrowRight" });

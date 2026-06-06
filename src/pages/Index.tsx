@@ -165,12 +165,12 @@ const Index = () => {
         <div className="studio-container split-layout">
           <div className="section-copy">
             <p className="section-label">Sobre nós</p>
-            <h2>Somos uma equipa focada em multimédia e identidade visual.</h2>
-            <p>
+            <h2 className="mb-4 mt-2">Somos uma equipa focada em multimédia e identidade visual.</h2>
+            <p className="mb-4 mt-2">
               Trabalhamos com produção audiovisual, fotografia e design gráfico
               para criar soluções consistentes, rápidas e visualmente fortes.
             </p>
-            <p>
+            <p className="mb-6">
               O nosso diferencial está na capacidade de transformar ideias em
               conteúdos visuais impactantes, alinhados às necessidades do mercado
               atual e aos objectivos de cada cliente.
@@ -211,14 +211,13 @@ const Index = () => {
           <div className="section-heading">
             <div>
               <p className="section-label">Serviços</p>
-              <h2>Conheça os nossos serviços</h2>
+              <h2 className="mt-2 mb-4">Conheça os nossos serviços</h2>
             </div>
-            <p>
-              Oferecemos soluções completas em comunicação visual e multimédia,
-              combinando criatividade, técnica e inovação em cada entrega.
-            </p>
           </div>
-
+          <p className="font-size-20 mt-2 mb-9">
+            Oferecemos soluções completas em comunicação visual e multimédia,<br />
+            combinando criatividade, técnica e inovação em cada entrega.
+          </p>
           <div className="service-grid">
             {services.map((service) => (
               <article key={service.title} className="service-card">
