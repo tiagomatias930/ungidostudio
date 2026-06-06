@@ -40,6 +40,10 @@ const partners = [
   { src: "/ungido/client-3.png", alt: "Parceiro 3" },
   { src: "/ungido/client-4.png", alt: "Parceiro 4" },
   { src: "/ungido/client-5.webp", alt: "DStv Angola" },
+  { src: "/ungido/logo-talatona.png", alt: "Administração de Talatona" },
+  { src: "/ungido/catocA3.png", alt: "CATO-A3" },
+  { src: "/ungido/grow_logo.svg", alt: "Grow-Construction" },
+  { src: "/ungido/logo-filda.png", alt: "Filda" },
 ];
 
 const portfolio = [
