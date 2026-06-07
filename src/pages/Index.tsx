@@ -104,7 +104,7 @@ const Index = () => {
     event.preventDefault();
     setIsSubmitting(true);
 
-    const wsUrl = import.meta.env.VITE_N8N_WS_URL || "ws://localhost:5678/webhook";
+    const wsUrl = import.meta.env.VITE_N8N_WS_URL;
     
     try {
       const socket = new WebSocket(wsUrl);
