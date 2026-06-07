@@ -203,6 +203,9 @@ describe("Ungido Studio - Portfolio Page and Navigation Tests", () => {
 
     vi.stubGlobal("WebSocket", MockWebSocket);
 
+    const originalUrl = import.meta.env.VITE_N8N_WS_URL;
+    import.meta.env.VITE_N8N_WS_URL = "ws://localhost:5678/webhook";
+
     render(
       <MemoryRouter>
         <Index />
@@ -234,6 +237,59 @@ describe("Ungido Studio - Portfolio Page and Navigation Tests", () => {
     expect(payload.data.subject).toBe("Orçamento Vídeo");
     expect(payload.data.message).toBe("Produção de vídeo institucional");
 
+    import.meta.env.VITE_N8N_WS_URL = originalUrl;
+    vi.unstubAllGlobals();
+  });
+
+  it("should send HTTP POST request with form data JSON payload on HTTP webhook URL submission", async () => {
+    const mockFetch = vi.fn().mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        statusText: "OK",
+        json: () => Promise.resolve({ status: "success" }),
+      })
+    );
+    vi.stubGlobal("fetch", mockFetch);
+
+    const originalUrl = import.meta.env.VITE_N8N_WS_URL;
+    import.meta.env.VITE_N8N_WS_URL = "https://vcatete.app.n8n.cloud/webhook-test/b1132c16-c2f1-43c0-a77a-f2b2b501eaaa";
+
+    render(
+      <MemoryRouter>
+        <Index />
+      </MemoryRouter>
+    );
+
+    // Fill form fields
+    fireEvent.change(screen.getByPlaceholderText("Primeiro nome"), { target: { value: "Tiago" } });
+    fireEvent.change(screen.getByPlaceholderText("Último nome"), { target: { value: "Matias" } });
+    fireEvent.change(screen.getByPlaceholderText("seuemail@dominio.com"), { target: { value: "tiago@example.com" } });
+    fireEvent.change(screen.getByPlaceholderText("Em que podemos ajudar?"), { target: { value: "Contacto Comercial" } });
+    fireEvent.change(screen.getByPlaceholderText("Descreva o seu projecto"), { target: { value: "Parceria estratégica" } });
+
+    // Submit form
+    const submitBtn = screen.getByRole("button", { name: "Submeter" });
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalled();
+    });
+
+    const [calledUrl, options] = mockFetch.mock.calls[0];
+    expect(calledUrl).toBe("https://vcatete.app.n8n.cloud/webhook-test/b1132c16-c2f1-43c0-a77a-f2b2b501eaaa");
+    expect(options.method).toBe("POST");
+    expect(options.headers["Content-Type"]).toBe("application/json");
+
+    const payload = JSON.parse(options.body);
+    expect(payload.event).toBe("form_submission");
+    expect(payload.data.firstName).toBe("Tiago");
+    expect(payload.data.lastName).toBe("Matias");
+    expect(payload.data.email).toBe("tiago@example.com");
+    expect(payload.data.subject).toBe("Contacto Comercial");
+    expect(payload.data.message).toBe("Parceria estratégica");
+
+    import.meta.env.VITE_N8N_WS_URL = originalUrl;
     vi.unstubAllGlobals();
   });
 });

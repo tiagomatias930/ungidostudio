@@ -100,68 +100,37 @@ const Index = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
 
-    const wsUrl = import.meta.env.VITE_N8N_WS_URL;
-    
-    try {
-      const socket = new WebSocket(wsUrl);
-      let gotAck = false;
+    const rawUrl = import.meta.env.VITE_N8N_WS_URL || "";
+    const wsUrl = rawUrl.replace(/^['"]|['"]$/g, "");
 
-      const timeoutId = setTimeout(() => {
-        if (socket.readyState !== WebSocket.OPEN) {
-          socket.close();
-          toast.error("Ligação ao n8n expirou. Verifique se o servidor está ativo.");
-          setIsSubmitting(false);
-        }
-      }, 5000);
+    if (!wsUrl) {
+      toast.error("A URL do n8n não está configurada.");
+      setIsSubmitting(false);
+      return;
+    }
 
-      socket.onopen = () => {
-        clearTimeout(timeoutId);
-        const payload = {
-          event: "form_submission",
-          timestamp: new Date().toISOString(),
-          data: formData
-        };
-        socket.send(JSON.stringify(payload));
-        
-        setTimeout(() => {
-          if (!gotAck && socket.readyState === WebSocket.OPEN) {
-            toast.success("Formulário submetido com sucesso via WebSocket!");
-            setFormData({
-              firstName: "",
-              lastName: "",
-              email: "",
-              subject: "",
-              message: "",
-            });
-            setIsSubmitting(false);
-            socket.close();
-          }
-        }, 1500);
-      };
+    const isHttp = wsUrl.startsWith("http://") || wsUrl.startsWith("https://");
 
-      socket.onmessage = (event) => {
-        gotAck = true;
-        setIsSubmitting(false);
-        try {
-          const response = JSON.parse(event.data);
-          if (response.status === "error" || response.error) {
-            toast.error(`Erro: ${response.message || "n8n rejeitou a submissão"}`);
-          } else {
-            toast.success("Formulário recebido com sucesso pelo n8n!");
-            setFormData({
-              firstName: "",
-              lastName: "",
-              email: "",
-              subject: "",
-              message: "",
-            });
-          }
-        } catch {
-          toast.success("Formulário submetido com sucesso!");
+    if (isHttp) {
+      try {
+        const response = await fetch(wsUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            event: "form_submission",
+            timestamp: new Date().toISOString(),
+            data: formData,
+          }),
+        });
+
+        if (response.ok) {
+          toast.success("Formulário recebido com sucesso pelo n8n!");
           setFormData({
             firstName: "",
             lastName: "",
@@ -169,21 +138,95 @@ const Index = () => {
             subject: "",
             message: "",
           });
+        } else {
+          toast.error(`Erro ao enviar formulário: ${response.statusText || response.status}`);
         }
-        socket.close();
-      };
-
-      socket.onerror = (err) => {
-        clearTimeout(timeoutId);
+      } catch (err) {
+        console.error("Erro ao submeter via Webhook:", err);
+        toast.error("Erro de ligação ao n8n. Verifique a URL do webhook.");
+      } finally {
         setIsSubmitting(false);
-        console.error("Erro WebSocket:", err);
-        toast.error("Erro de ligação WebSocket. Verifique as configurações do n8n.");
-      };
+      }
+    } else {
+      try {
+        const socket = new WebSocket(wsUrl);
+        let gotAck = false;
 
-    } catch (err) {
-      setIsSubmitting(false);
-      console.error("Erro ao iniciar WebSocket:", err);
-      toast.error("Não foi possível estabelecer ligação WebSocket.");
+        const timeoutId = setTimeout(() => {
+          if (socket.readyState !== WebSocket.OPEN) {
+            socket.close();
+            toast.error("Ligação ao n8n expirou. Verifique se o servidor está ativo.");
+            setIsSubmitting(false);
+          }
+        }, 5000);
+
+        socket.onopen = () => {
+          clearTimeout(timeoutId);
+          const payload = {
+            event: "form_submission",
+            timestamp: new Date().toISOString(),
+            data: formData
+          };
+          socket.send(JSON.stringify(payload));
+          
+          setTimeout(() => {
+            if (!gotAck && socket.readyState === WebSocket.OPEN) {
+              toast.success("Formulário submetido com sucesso via WebSocket!");
+              setFormData({
+                firstName: "",
+                lastName: "",
+                email: "",
+                subject: "",
+                message: "",
+              });
+              setIsSubmitting(false);
+              socket.close();
+            }
+          }, 1500);
+        };
+
+        socket.onmessage = (event) => {
+          gotAck = true;
+          setIsSubmitting(false);
+          try {
+            const response = JSON.parse(event.data);
+            if (response.status === "error" || response.error) {
+              toast.error(`Erro: ${response.message || "n8n rejeitou a submissão"}`);
+            } else {
+              toast.success("Formulário recebido com sucesso pelo n8n!");
+              setFormData({
+                firstName: "",
+                lastName: "",
+                email: "",
+                subject: "",
+                message: "",
+              });
+            }
+          } catch {
+            toast.success("Formulário submetido com sucesso!");
+            setFormData({
+              firstName: "",
+              lastName: "",
+              email: "",
+              subject: "",
+              message: "",
+            });
+          }
+          socket.close();
+        };
+
+        socket.onerror = (err) => {
+          clearTimeout(timeoutId);
+          setIsSubmitting(false);
+          console.error("Erro WebSocket:", err);
+          toast.error("Erro de ligação WebSocket. Verifique as configurações do n8n.");
+        };
+
+      } catch (err) {
+        setIsSubmitting(false);
+        console.error("Erro ao iniciar WebSocket:", err);
+        toast.error("Não foi possível estabelecer ligação WebSocket.");
+      }
     }
   };
 
@@ -277,15 +320,15 @@ const Index = () => {
             <div className="mini-stats">
               <div>
                 <strong>3</strong>
-                <span>áreas centrais de serviço</span>
+                <span>Áreas centrais de serviço</span>
               </div>
               <div>
                 <strong>24h</strong>
-                <span>resposta rápida a pedidos</span>
+                <span>Resposta rápida a pedidos</span>
               </div>
               <div>
                 <strong>100%</strong>
-                <span>foco em consistência visual</span>
+                <span>Foco em consistência visual</span>
               </div>
             </div>
           </div>
