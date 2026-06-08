@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
@@ -36,8 +36,6 @@ const services = [
 const partners = [
   { src: "/ungido/client-1.png", alt: "Sonangol" },
   { src: "/ungido/client-2.png", alt: "TAAG" },
-  { src: "/ungido/client-3.png", alt: "Parceiro 3" },
-  { src: "/ungido/client-4.png", alt: "Parceiro 4" },
   { src: "/ungido/client-5.webp", alt: "DStv Angola" },
   { src: "/ungido/logo-talatona.png", alt: "Administração de Talatona" },
   { src: "/ungido/catocA3.png", alt: "CATO-A3" },
@@ -95,16 +93,21 @@ const Index = () => {
     firstName: "",
     lastName: "",
     email: "",
+    phone: "",
     subject: "",
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    document.title = "Ungido Studio - Produção Multimédia, Fotografia e Design Gráfico em Luanda";
+  }, []);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
 
-    const rawUrl = "https://vcatete.app.n8n.cloud/webhook-test/b1132c16-c2f1-43c0-a77a-f2b2b501eaaa";
+    const rawUrl = import.meta.env.VITE_N8N_WS_URL || "https://timatiadev.app.n8n.cloud/webhook/b1132c16-c2f1-43c0-a77a-f2b2b501eaaa";
     const wsUrl = rawUrl.replace(/^['"]|['"]$/g, "");
 
     if (!wsUrl) {
@@ -135,6 +138,7 @@ const Index = () => {
             firstName: "",
             lastName: "",
             email: "",
+            phone: "",
             subject: "",
             message: "",
           });
@@ -176,6 +180,7 @@ const Index = () => {
                 firstName: "",
                 lastName: "",
                 email: "",
+                phone: "",
                 subject: "",
                 message: "",
               });
@@ -198,6 +203,7 @@ const Index = () => {
                 firstName: "",
                 lastName: "",
                 email: "",
+                phone: "",
                 subject: "",
                 message: "",
               });
@@ -208,6 +214,7 @@ const Index = () => {
               firstName: "",
               lastName: "",
               email: "",
+              phone: "",
               subject: "",
               message: "",
             });
@@ -540,6 +547,16 @@ const Index = () => {
             </label>
 
             <label>
+              <span>Telefone / WhatsApp</span>
+              <input
+                type="tel"
+                placeholder="+244 9xx xxx xxx"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              />
+            </label>
+
+            <label>
               <span>Assunto</span>
               <input
                 type="text"
@@ -566,7 +583,7 @@ const Index = () => {
               className="primary-button primary-button-dark"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "A enviar..." : "Submeter"}
+              {isSubmitting ? "A enviar..." : "Solicitar Orçamento Grátis"}
               <ChevronRight size={18} />
             </button>
           </form>

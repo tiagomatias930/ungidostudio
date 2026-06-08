@@ -216,11 +216,12 @@ describe("Ungido Studio - Portfolio Page and Navigation Tests", () => {
     fireEvent.change(screen.getByPlaceholderText("Primeiro nome"), { target: { value: "Mauro" } });
     fireEvent.change(screen.getByPlaceholderText("Último nome"), { target: { value: "Gunza" } });
     fireEvent.change(screen.getByPlaceholderText("seuemail@dominio.com"), { target: { value: "mauro@example.com" } });
+    fireEvent.change(screen.getByPlaceholderText("+244 9xx xxx xxx"), { target: { value: "+244 928 002 093" } });
     fireEvent.change(screen.getByPlaceholderText("Em que podemos ajudar?"), { target: { value: "Orçamento Vídeo" } });
     fireEvent.change(screen.getByPlaceholderText("Descreva o seu projecto"), { target: { value: "Produção de vídeo institucional" } });
 
     // Submit form
-    const submitBtn = screen.getByRole("button", { name: "Submeter" });
+    const submitBtn = screen.getByRole("button", { name: "Solicitar Orçamento Grátis" });
     fireEvent.click(submitBtn);
 
     await waitFor(() => {
@@ -234,6 +235,7 @@ describe("Ungido Studio - Portfolio Page and Navigation Tests", () => {
     expect(payload.data.firstName).toBe("Mauro");
     expect(payload.data.lastName).toBe("Gunza");
     expect(payload.data.email).toBe("mauro@example.com");
+    expect(payload.data.phone).toBe("+244 928 002 093");
     expect(payload.data.subject).toBe("Orçamento Vídeo");
     expect(payload.data.message).toBe("Produção de vídeo institucional");
 
@@ -265,11 +267,12 @@ describe("Ungido Studio - Portfolio Page and Navigation Tests", () => {
     fireEvent.change(screen.getByPlaceholderText("Primeiro nome"), { target: { value: "Tiago" } });
     fireEvent.change(screen.getByPlaceholderText("Último nome"), { target: { value: "Matias" } });
     fireEvent.change(screen.getByPlaceholderText("seuemail@dominio.com"), { target: { value: "tiago@example.com" } });
+    fireEvent.change(screen.getByPlaceholderText("+244 9xx xxx xxx"), { target: { value: "+244 928 002 093" } });
     fireEvent.change(screen.getByPlaceholderText("Em que podemos ajudar?"), { target: { value: "Contacto Comercial" } });
     fireEvent.change(screen.getByPlaceholderText("Descreva o seu projecto"), { target: { value: "Parceria estratégica" } });
 
     // Submit form
-    const submitBtn = screen.getByRole("button", { name: "Submeter" });
+    const submitBtn = screen.getByRole("button", { name: "Solicitar Orçamento Grátis" });
     fireEvent.click(submitBtn);
 
     await waitFor(() => {
@@ -286,6 +289,7 @@ describe("Ungido Studio - Portfolio Page and Navigation Tests", () => {
     expect(payload.data.firstName).toBe("Tiago");
     expect(payload.data.lastName).toBe("Matias");
     expect(payload.data.email).toBe("tiago@example.com");
+    expect(payload.data.phone).toBe("+244 928 002 093");
     expect(payload.data.subject).toBe("Contacto Comercial");
     expect(payload.data.message).toBe("Parceria estratégica");
 
