@@ -104,7 +104,7 @@ const Index = () => {
     event.preventDefault();
     setIsSubmitting(true);
 
-    const rawUrl = import.meta.env.VITE_N8N_WS_URL || "";
+    const rawUrl = "https://vcatete.app.n8n.cloud/webhook-test/b1132c16-c2f1-43c0-a77a-f2b2b501eaaa";
     const wsUrl = rawUrl.replace(/^['"]|['"]$/g, "");
 
     if (!wsUrl) {
@@ -168,7 +168,7 @@ const Index = () => {
             data: formData
           };
           socket.send(JSON.stringify(payload));
-          
+
           setTimeout(() => {
             if (!gotAck && socket.readyState === WebSocket.OPEN) {
               toast.success("Formulário submetido com sucesso via WebSocket!");
